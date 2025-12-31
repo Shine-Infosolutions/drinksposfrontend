@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import CustomerInputs from './CustomerInputs';
 import MenuItems from './MenuItems';
@@ -10,11 +10,18 @@ import logoImg from '../assets/buddha-logo.png';
 import { usePosContext } from '../context/PosContext';
 
 export default function ResponsivePOSLayout() {
-  const [selectedCategory, setSelectedCategory] = useState('BEVERAGES');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('pos');
-  const { cart, loading } = usePosContext();
+  const { cart, loading, categories } = usePosContext();
+  
+  // Set default category when categories are loaded
+  useEffect(() => {
+    if (categories.length > 0 && !selectedCategory) {
+      setSelectedCategory(categories[0]);
+    }
+  }, [categories, selectedCategory]);
   
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
