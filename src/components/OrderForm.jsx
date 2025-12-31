@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 
+const API_BASE_URL = 'https://drinksposbackend.vercel.app/api';
+
 export default function OrderForm({ onClose, onOrderCreated }) {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/items?limit=100`);
+        const response = await fetch(`${API_BASE_URL}/items?limit=100`);
         const data = await response.json();
         setItems(Array.isArray(data) ? data : data.data || []);
       } catch (error) {
@@ -69,7 +71,7 @@ export default function OrderForm({ onClose, onOrderCreated }) {
     };
 
     try {
-      const response = await fetch(import.meta.env.VITE_API_URL + '/orders', {
+      const response = await fetch(API_BASE_URL + '/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)

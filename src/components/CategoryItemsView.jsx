@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { usePosContext } from '../context/PosContext';
 
+const API_BASE_URL = 'https://drinksposbackend.vercel.app/api';
+
 export default function CategoryItemsView({ selectedCategory }) {
   const { addToCart } = usePosContext();
   const [showCreateItem, setShowCreateItem] = useState(false);
@@ -24,8 +26,8 @@ export default function CategoryItemsView({ selectedCategory }) {
       setLoading(true);
       try {
         const [catsRes, itemsRes] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_URL}/categories`),
-          fetch(`${import.meta.env.VITE_API_URL}/items?limit=100`)
+          fetch(`${API_BASE_URL}/categories`),
+          fetch(`${API_BASE_URL}/items?limit=100`)
         ]);
         
         const catsData = await catsRes.json();
@@ -73,7 +75,7 @@ export default function CategoryItemsView({ selectedCategory }) {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/items`, {
+      const response = await fetch(`${API_BASE_URL}/items`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(itemData)
@@ -85,7 +87,7 @@ export default function CategoryItemsView({ selectedCategory }) {
         setFormData({ itemName: '', price: '', qty: 1, categoryId: '' });
         
         // Refresh items
-        const itemsResponse = await fetch(`${import.meta.env.VITE_API_URL}/items`);
+        const itemsResponse = await fetch(`${API_BASE_URL}/items`);
         const data = await itemsResponse.json();
         const allItems = Array.isArray(data) ? data : data.data || [];
         
@@ -112,7 +114,7 @@ export default function CategoryItemsView({ selectedCategory }) {
     e.preventDefault();
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/categories`, {
+      const response = await fetch(`${API_BASE_URL}/categories`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ categoryName })

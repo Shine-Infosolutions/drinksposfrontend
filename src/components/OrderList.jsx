@@ -6,6 +6,8 @@ import ItemForm from './ItemForm';
 
 import logoImg from '../assets/buddha-logo.png';
 
+const API_BASE_URL = 'https://drinksposbackend.vercel.app/api';
+
 export default function OrderList({ onOpenCart }) {
   const { updateOrderById } = usePosContext();
   const [orders, setOrders] = useState([]);
@@ -29,7 +31,7 @@ export default function OrderList({ onOpenCart }) {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        let url = `${import.meta.env.VITE_API_URL}/orders?page=${currentPage}&limit=${limit}`;
+        let url = `${API_BASE_URL}/orders?page=${currentPage}&limit=${limit}`;
         
         if (searchTerm && searchTerm.trim()) {
           url += `&search=${encodeURIComponent(searchTerm.trim())}`;
@@ -61,7 +63,7 @@ export default function OrderList({ onOpenCart }) {
   useEffect(() => {
     const fetchAllOrders = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/orders?limit=10000`);
+        const response = await fetch(`${API_BASE_URL}/orders?limit=10000`);
         const data = await response.json();
         
         if (Array.isArray(data)) {
@@ -104,7 +106,7 @@ export default function OrderList({ onOpenCart }) {
   const handleDeleteOrder = async (orderId) => {
     if (window.confirm('Are you sure you want to delete this order?')) {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/orders/${orderId}`, {
+        const response = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
           method: 'DELETE'
         });
         if (response.ok) {
@@ -128,7 +130,7 @@ export default function OrderList({ onOpenCart }) {
   };
 
   const refreshOrders = async () => {
-    let url = `${import.meta.env.VITE_API_URL}/orders?page=${currentPage}&limit=${limit}`;
+    let url = `${API_BASE_URL}/orders?page=${currentPage}&limit=${limit}`;
     
     if (searchTerm && searchTerm.trim()) {
       url += `&search=${encodeURIComponent(searchTerm.trim())}`;
@@ -233,7 +235,7 @@ export default function OrderList({ onOpenCart }) {
     setEditingOrder(JSON.parse(JSON.stringify(order)));
     setShowEditOrder(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/items?limit=1000`);
+      const response = await fetch(`${API_BASE_URL}/items?limit=1000`);
       const data = await response.json();
       setAvailableItems(Array.isArray(data) ? data : data.data || []);
     } catch (error) {
@@ -727,14 +729,14 @@ export default function OrderList({ onOpenCart }) {
                     totalPrice: totalPrice,
                     totalAmount: totalPrice
                   };
-                  const response = await fetch(`${import.meta.env.VITE_API_URL}/orders/${editingOrder._id}`, {
+                  const response = await fetch(`${API_BASE_URL}/orders/${editingOrder._id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updatedOrder)
                   });
                   if (response.ok) {
                     await refreshOrders();
-                    const allOrdersResponse = await fetch(`${import.meta.env.VITE_API_URL}/orders?limit=10000`);
+                    const allOrdersResponse = await fetch(`${API_BASE_URL}/orders?limit=10000`);
                     const allOrdersData = await allOrdersResponse.json();
                     setAllOrders(Array.isArray(allOrdersData) ? allOrdersData : allOrdersData.data || []);
                     setShowEditOrder(false);

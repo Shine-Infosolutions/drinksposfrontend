@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+const API_BASE_URL = 'https://drinksposbackend.vercel.app/api';
+
 export default function ItemForm({ onClose, onItemCreated }) {
   const [formData, setFormData] = useState({
     itemName: '',
@@ -12,7 +14,7 @@ export default function ItemForm({ onClose, onItemCreated }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/categories`);
+        const response = await fetch(`${API_BASE_URL}/categories`);
         const data = await response.json();
         const allCats = Array.isArray(data) ? data : data.data || [];
         setCategories(allCats);
@@ -35,7 +37,7 @@ export default function ItemForm({ onClose, onItemCreated }) {
     };
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/items`, {
+      const response = await fetch(`${API_BASE_URL}/items`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(itemData)
